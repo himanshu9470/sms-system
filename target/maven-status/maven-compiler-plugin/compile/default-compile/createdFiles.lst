@@ -1,0 +1,16 @@
+com\studentmanagement\controller\HomeController.class
+com\studentmanagement\model\Student.class
+com\studentmanagement\model\User$Role.class
+com\studentmanagement\controller\AuthController.class
+com\studentmanagement\repository\StudentRepository.class
+com\studentmanagement\repository\UserRepository.class
+com\studentmanagement\config\SecurityConfig.class
+com\studentmanagement\model\Enrollment.class
+com\studentmanagement\model\Course.class
+com\studentmanagement\model\User.class
+com\studentmanagement\service\UserService.class
+com\studentmanagement\service\CustomUserDetailsService.class
+com\studentmanagement\controller\StudentController.class
+com\studentmanagement\service\StudentService.class
+com\studentmanagement\controller\AdminController.class
+com\studentmanagement\StudentManagementSystemApplication.class
