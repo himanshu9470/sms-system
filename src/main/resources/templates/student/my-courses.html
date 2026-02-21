@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses - Student</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .course-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: start;
+        }
+        
+        .course-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .course-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .detail-item {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .detail-item strong {
+            color: #333;
+        }
+        
+        .course-actions {
+            text-align: right;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .empty-message i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>My Enrolled Courses</h1>
+            <div>
+                <a href="/student/courses" class="btn btn-primary">Browse Courses</a>
+                <a href="/student/dashboard" class="btn btn-primary">Back to Dashboard</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div th:if="${enrollments and enrollments.size() > 0}">
+                <div th:each="enrollment : ${enrollments}" class="course-card">
+                    <div class="course-info">
+                        <h3 th:text="${enrollment.course.courseName}"></h3>
+                        <div class="course-details">
+                            <div class="detail-item">
+                                <strong>Course Code:</strong> <span th:text="${enrollment.course.courseCode}"></span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Credits:</strong> <span th:text="${enrollment.course.credits}"></span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Enrollment Date:</strong> <span th:text="${enrollment.enrollmentDate}"></span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Grade:</strong> <span th:text="${enrollment.grade != null ? enrollment.grade : 'Not Graded'}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <form th:action="@{/student/courses/drop/{enrollmentId}(enrollmentId=${enrollment.id})}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to drop this course?');">Drop Course</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${!enrollments or enrollments.size() == 0}" class="empty-message">
+                <i>📚</i>
+                <h3>No Enrolled Courses</h3>
+                <p>You are not enrolled in any courses yet.</p>
+                <a href="/student/courses" class="btn btn-primary">Browse Available Courses</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

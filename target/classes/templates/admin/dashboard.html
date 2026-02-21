@@ -65,13 +65,23 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" th:href="@{/admin/courses}">
                                 <i class="fas fa-book me-2"></i> Courses
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" th:href="@{/admin/enrollments}">
+                                <i class="fas fa-file-alt me-2"></i> Enrollments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/reports}">
                                 <i class="fas fa-chart-bar me-2"></i> Reports
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/admin/settings}">
+                                <i class="fas fa-cog me-2"></i> Settings
                             </a>
                         </li>
                         <li class="nav-item">
@@ -137,7 +147,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <h6 class="card-subtitle mb-2">Courses</h6>
-                                        <h2 class="card-title">25</h2>
+                                        <h2 class="card-title" th:text="${courseCount}">0</h2>
                                     </div>
                                     <i class="fas fa-book"></i>
                                 </div>

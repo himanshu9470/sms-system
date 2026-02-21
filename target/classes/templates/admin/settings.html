@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .settings-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        
+        .settings-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+        
+        .description {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+            padding: 12px 30px;
+        }
+        
+        .btn-submit:hover {
+            background: #229954;
+        }
+        
+        .settings-info {
+            background: #f0f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .settings-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .settings-info p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>System Settings</h1>
+            <a href="/admin/dashboard" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+        
+        <div class="content">
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            
+            <form method="POST" action="/admin/settings/update">
+                <!-- Academic Settings -->
+                <div class="settings-section">
+                    <h2>Academic Settings</h2>
+                    
+                    <div class="settings-info">
+                        <h3>Current Academic Period</h3>
+                        <p>Configure the current semester and academic year for course registrations</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="semester">Current Semester</label>
+                        <select id="semester" name="semester">
+                            <option value="">-- Select Semester --</option>
+                            <option value="Fall 2025">Fall 2025</option>
+                            <option value="Spring 2026">Spring 2026</option>
+                            <option value="Summer 2026">Summer 2026</option>
+                        </select>
+                        <div class="description">Select the current academic semester</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="academicYear">Academic Year</label>
+                        <input type="text" id="academicYear" name="academicYear" placeholder="e.g., 2025-2026" value="2025-2026">
+                        <div class="description">Enter the current academic year</div>
+                    </div>
+                </div>
+                
+                <!-- Course Management Settings -->
+                <div class="settings-section">
+                    <h2>Course Management</h2>
+                    
+                    <div class="settings-info">
+                        <h3>Course Configuration</h3>
+                        <p>Configure course registration deadlines and policies</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registrationDeadline">Registration Deadline (Days)</label>
+                        <input type="number" id="registrationDeadline" name="registrationDeadline" min="0" placeholder="e.g., 30" value="30">
+                        <div class="description">Number of days from semester start until registration closes</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="maxCoursesPerSemester">Max Courses Per Semester</label>
+                        <input type="number" id="maxCoursesPerSemester" name="maxCoursesPerSemester" min="1" placeholder="e.g., 6" value="6">
+                        <div class="description">Maximum number of courses a student can register for</div>
+                    </div>
+                </div>
+                
+                <!-- Grading Settings -->
+                <div class="settings-section">
+                    <h2>Grading Settings</h2>
+                    
+                    <div class="settings-info">
+                        <h3>Grade Configuration</h3>
+                        <p>Configure grading scale and policies</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gradingScale">Grading Scale</label>
+                        <select id="gradingScale" name="gradingScale">
+                            <option value="">-- Select Grading Scale --</option>
+                            <option value="A-F">A-F (4.0 scale)</option>
+                            <option value="Percentage">Percentage (0-100)</option>
+                            <option value="Pass-Fail">Pass/Fail</option>
+                        </select>
+                        <div class="description">Select the grading scale to be used</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="passingGrade">Passing Grade</label>
+                        <input type="text" id="passingGrade" name="passingGrade" placeholder="e.g., D or 40%" value="D">
+                        <div class="description">Minimum passing grade for courses</div>
+                    </div>
+                </div>
+                
+                <!-- System Preferences -->
+                <div class="settings-section">
+                    <h2>System Preferences</h2>
+                    
+                    <div class="settings-info">
+                        <h3>General Settings</h3>
+                        <p>Configure general system preferences</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="institutionName">Institution Name</label>
+                        <input type="text" id="institutionName" name="institutionName" placeholder="e.g., EduTech University" value="EduTech University">
+                        <div class="description">Name of your educational institution</div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-submit">Save Settings</button>
+                    <a href="/admin/dashboard" class="btn btn-primary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

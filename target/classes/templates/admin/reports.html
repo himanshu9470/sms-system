@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .report-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .report-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .report-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .report-card a {
+            color: white;
+            background: #667eea;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        
+        .report-card a:hover {
+            background: #764ba2;
+        }
+        
+        .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Reports</h1>
+            <a href="/admin/dashboard" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+        
+        <div class="content">
+            <h2 style="margin-bottom: 30px; color: #333;">Select a Report to View</h2>
+            
+            <div class="reports-grid">
+                <div class="report-card">
+                    <div class="icon">👥</div>
+                    <h3>Student Report</h3>
+                    <p>View detailed information about all students including enrollment records</p>
+                    <a href="/admin/reports/student-report">View Report</a>
+                </div>
+                
+                <div class="report-card">
+                    <div class="icon">📚</div>
+                    <h3>Course Report</h3>
+                    <p>View course information including enrollment counts and details</p>
+                    <a href="/admin/reports/course-report">View Report</a>
+                </div>
+                
+                <div class="report-card">
+                    <div class="icon">📝</div>
+                    <h3>Enrollment Report</h3>
+                    <p>View all student course enrollments and grading status</p>
+                    <a href="/admin/reports/enrollment-report">View Report</a>
+                </div>
+                
+                <div class="report-card">
+                    <div class="icon">📊</div>
+                    <h3>Academic Summary</h3>
+                    <p>View overall academic statistics and key metrics</p>
+                    <a href="/admin/reports/academic-summary">View Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>All Enrollments</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>All Enrollments</h1>
+        <a th:href="@{/admin/dashboard}" class="btn btn-secondary">Back</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(enrollments)}">
+        <p>No enrollments found.</p>
+    </div>
+
+    <table class="table table-striped" th:if="${!#lists.isEmpty(enrollments)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Grade</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="enrollment : ${enrollments}">
+            <td th:text="${enrollment.id}">1</td>
+            <td th:text="${enrollment.student.fullName}">Student Name</td>
+            <td th:text="${enrollment.course.title}">Course Title</td>
+            <td th:text="${enrollment.grade != null ? enrollment.grade : 'N/A'}">N/A</td>
+            <td>
+                <form th:action="@{'/admin/enrollments/' + ${enrollment.id} + '/grade'}" method="post" class="d-inline">
+                    <input type="text" name="grade" placeholder="Grade" class="form-control d-inline-block" style="width:90px;" />
+                    <button class="btn btn-primary btn-sm" type="submit">Update</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

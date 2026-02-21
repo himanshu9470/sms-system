@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Courses - Student</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        
+        .btn-warning:hover {
+            background: #d68910;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 15px;
+            border-radius: 5px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            color: #666;
+            transition: 0.3s;
+        }
+        
+        .tab:hover {
+            color: #667eea;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .course-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+        }
+        
+        .course-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .course-info {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .course-info strong {
+            color: #333;
+        }
+        
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Course Registration</h1>
+            <a href="/student/dashboard" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+        
+        <div class="content">
+            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab(event, 'available')">Available Courses</div>
+                <div class="tab" onclick="switchTab(event, 'enrolled')">My Enrolled Courses</div>
+            </div>
+            
+            <!-- Available Courses Tab -->
+            <div id="available" class="tab-content active">
+                <h2 style="margin-bottom: 20px;">Available Courses</h2>
+                
+                <div th:if="${courses and courses.size() > 0}">
+                    <div th:each="course : ${courses}" class="course-card">
+                        <h3 th:text="${course.courseName}"></h3>
+                        <div class="course-info">
+                            <p><strong>Course Code:</strong> <span th:text="${course.courseCode}"></span></p>
+                            <p><strong>Credits:</strong> <span th:text="${course.credits}"></span></p>
+                            <p><strong>Description:</strong> <span th:text="${course.description}"></span></p>
+                        </div>
+                        <div class="course-actions">
+                            <form th:action="@{/student/courses/register/{courseId}(courseId=${course.id})}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-success" th:disabled="${enrolledCourses != null and enrolledCourses.?[course.id].size() > 0}">
+                                    Register
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <p th:if="${!courses or courses.size() == 0}" style="color: #999;">No courses available.</p>
+            </div>
+            
+            <!-- Enrolled Courses Tab -->
+            <div id="enrolled" class="tab-content">
+                <h2 style="margin-bottom: 20px;">My Enrolled Courses</h2>
+                
+                <div th:if="${enrolledCourses and enrolledCourses.size() > 0}">
+                    <div th:each="enrollment : ${enrolledCourses}" class="course-card">
+                        <h3 th:text="${enrollment.course.courseName}"></h3>
+                        <div class="course-info">
+                            <p><strong>Course Code:</strong> <span th:text="${enrollment.course.courseCode}"></span></p>
+                            <p><strong>Credits:</strong> <span th:text="${enrollment.course.credits}"></span></p>
+                            <p><strong>Enrollment Date:</strong> <span th:text="${enrollment.enrollmentDate}"></span></p>
+                            <p><strong>Grade:</strong> <span th:text="${enrollment.grade != null ? enrollment.grade : 'Not Graded'}"></span></p>
+                        </div>
+                        <div class="course-actions">
+                            <form th:action="@{/student/courses/drop/{enrollmentId}(enrollmentId=${enrollment.id})}" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to drop this course?');">Drop Course</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <p th:if="${!enrolledCourses or enrolledCourses.size() == 0}" style="color: #999;">You are not enrolled in any courses yet.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function switchTab(event, tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
