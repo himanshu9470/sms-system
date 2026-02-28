@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Attendance - Parent</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a2a3a 0%, #0d1b2a 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #e67e22;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(230, 126, 34, 0.1);
+            color: #e67e22;
+            border-right: 3px solid #e67e22;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #e67e22;
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+        }
+
+        .back-link a {
+            color: #e67e22;
+            text-decoration: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26, 42, 58, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(230, 126, 34, 0.15);
+            padding: 12px;
+            text-align: left;
+            color: #e67e22;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .status-PRESENT {
+            color: #2ecc71;
+        }
+
+        .status-ABSENT {
+            color: #e74c3c;
+        }
+
+        .status-LATE {
+            color: #f1c40f;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Parent Portal</small>
+        </div>
+        <a th:href="@{/parent/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <div class="back-link"><a th:href="@{/parent/dashboard}"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+        <h1><i class="fas fa-clipboard-check"></i> Attendance Records</h1>
+        <table th:if="${attendanceRecords != null and !attendanceRecords.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Course</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="a : ${attendanceRecords}">
+                    <td th:text="${a.attendanceDate}"></td>
+                    <td th:text="${a.course.courseName}"></td>
+                    <td th:classappend="'status-' + ${a.status}" th:text="${a.status}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${attendanceRecords == null or attendanceRecords.isEmpty()}"
+            style="color:#666; text-align:center; padding:40px;">No attendance records found.</p>
+    </div>
+</body>
+
+</html>

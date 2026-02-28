@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Grades - Parent</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a2a3a 0%, #0d1b2a 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #e67e22;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(230, 126, 34, 0.1);
+            color: #e67e22;
+            border-right: 3px solid #e67e22;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #e67e22;
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+        }
+
+        .back-link a {
+            color: #e67e22;
+            text-decoration: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26, 42, 58, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(230, 126, 34, 0.15);
+            padding: 12px;
+            text-align: left;
+            color: #e67e22;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .grade-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .grade-A {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .grade-B {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+
+        .grade-C {
+            background: rgba(241, 196, 15, 0.2);
+            color: #f1c40f;
+        }
+
+        .grade-pending {
+            background: rgba(149, 165, 166, 0.2);
+            color: #95a5a6;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Parent Portal</small>
+        </div>
+        <a th:href="@{/parent/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <div class="back-link"><a th:href="@{/parent/dashboard}"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+        <h1><i class="fas fa-chart-bar"></i> Grades</h1>
+        <table th:if="${enrollments != null and !enrollments.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Enrolled</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="e : ${enrollments}">
+                    <td th:text="${e.course.courseCode}"></td>
+                    <td th:text="${e.course.courseName}"></td>
+                    <td th:text="${e.enrollmentDate}"></td>
+                    <td><span class="grade-badge"
+                            th:classappend="${e.grade != null ? (e.grade.startsWith('A') ? 'grade-A' : (e.grade.startsWith('B') ? 'grade-B' : 'grade-C')) : 'grade-pending'}"
+                            th:text="${e.grade != null ? e.grade : 'Pending'}"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${enrollments == null or enrollments.isEmpty()}" style="color:#666; text-align:center; padding:40px;">
+            No enrollments found.</p>
+    </div>
+</body>
+
+</html>

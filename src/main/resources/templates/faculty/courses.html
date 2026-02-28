@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg-dark: #0f172a;
+            --bg-sidebar: #111827;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-sky: #0ea5e9;
+            --accent-amber: #f59e0b
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-sidebar);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--accent-sky), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(14, 165, 233, 0.08);
+            border-left-color: rgba(14, 165, 233, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(14, 165, 233, 0.12);
+            border-left-color: var(--accent-sky)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
+        }
+
+        .content-area {
+            padding: 1.5rem 2rem
+        }
+
+        .course-card {
+            background: var(--bg-card);
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1.5rem;
+            transition: all 0.3s
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06)
+        }
+
+        .course-card h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem
+        }
+
+        .course-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem
+        }
+
+        .course-code {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-sky);
+            margin-bottom: 0.75rem
+        }
+
+        .btn-action {
+            display: inline-block;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin-right: 0.5rem
+        }
+
+        .btn-mark {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.2)
+        }
+
+        .btn-mark:hover {
+            background: var(--accent-emerald);
+            color: white
+        }
+
+        .btn-history {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-sky);
+            border: 1px solid rgba(14, 165, 233, 0.2)
+        }
+
+        .btn-history:hover {
+            background: var(--accent-sky);
+            color: white
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted)
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Faculty Panel</small>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div><a class="nav-link" th:href="@{/faculty/dashboard}"><i
+                    class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Teaching</div><a class="nav-link active" th:href="@{/faculty/courses}"><i
+                    class="fas fa-book-open"></i> My Courses</a>
+            <div class="nav-section">Account</div><a class="nav-link" th:href="@{/logout}"><i
+                    class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-book-open me-2" style="color:var(--accent-sky)"></i>My Courses</h1>
+        </div>
+        <div class="content-area">
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4"
+                style="border-radius:10px;border:none;font-size:0.875rem"><i class="fas fa-check-circle me-2"></i><span
+                    th:text="${success}"></span><button type="button" class="btn-close"
+                    data-bs-dismiss="alert"></button></div>
+            <div class="row g-4" th:if="${courses != null and !courses.isEmpty()}">
+                <div class="col-md-6 col-lg-4" th:each="course : ${courses}">
+                    <div class="course-card">
+                        <span class="course-code" th:text="${course.courseCode}"></span>
+                        <h5 th:text="${course.courseName}"></h5>
+                        <p th:text="${course.description != null ? course.description : 'No description'}"></p>
+                        <div class="d-flex align-items-center mb-3" style="font-size:0.8rem;color:var(--text-muted)">
+                            <span><i class="fas fa-star me-1"></i><span th:text="${course.credits}"></span>
+                                Credits</span>
+                            <span class="mx-2">•</span>
+                            <span th:if="${course.department != null}" th:text="${course.department}"></span>
+                        </div>
+                        <div>
+                            <a th:href="@{/faculty/attendance/mark/{id}(id=${course.id})}"
+                                class="btn-action btn-mark"><i class="fas fa-check-circle me-1"></i>Mark Attendance</a>
+                            <a th:href="@{/faculty/attendance/history/{id}(id=${course.id})}"
+                                class="btn-action btn-history"><i class="fas fa-history me-1"></i>History</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${courses == null or courses.isEmpty()}" class="empty-state">
+                <i class="fas fa-book-open"></i>
+                <h5>No Courses Assigned</h5>
+                <p>Contact the administrator to get courses assigned.</p>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,23 +11,23 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -35,11 +36,11 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .header h1 {
             font-size: 28px;
         }
-        
+
         .btn {
             padding: 10px 20px;
             border: none;
@@ -50,81 +51,83 @@
             display: inline-block;
             transition: 0.3s;
         }
-        
+
         .btn-primary {
             background: #667eea;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #764ba2;
         }
-        
+
         .content {
             padding: 20px;
         }
-        
+
         .info-box {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
         }
-        
+
         .info-box strong {
             color: #333;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        
-        th, td {
+
+        th,
+        td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-        
+
         th {
             background: #f8f9fa;
             font-weight: bold;
         }
-        
+
         tr:hover {
             background: #f5f5f5;
         }
-        
+
         .back-link {
             display: inline-block;
             margin-bottom: 20px;
             color: #667eea;
             text-decoration: none;
         }
-        
+
         .back-link:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <div>
                 <h1 th:text="${'Course: ' + course.courseName}"></h1>
             </div>
-            <a href="/admin/courses" class="btn btn-primary">Back to Courses</a>
+            <a th:href="@{/admin/courses}" class="btn btn-primary">Back to Courses</a>
         </div>
-        
+
         <div class="content">
             <div class="info-box">
                 <p><strong>Course Code:</strong> <span th:text="${course.courseCode}"></span></p>
                 <p><strong>Credits:</strong> <span th:text="${course.credits}"></span></p>
                 <p><strong>Total Enrollments:</strong> <span th:text="${enrollments.size()}"></span></p>
             </div>
-            
-            <table th:if="${enrollments and enrollments.size() > 0}">
+
+            <table th:if="${enrollments != null and !enrollments.isEmpty()}">
                 <thead>
                     <tr>
                         <th>Student ID</th>
@@ -136,7 +139,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="enrollment : ${enrollments}">
-                        <td th:text="${enrollment.student.id}"></td>
+                        <td th:text="${enrollment.student.studentId}"></td>
                         <td th:text="${enrollment.student.firstName + ' ' + enrollment.student.lastName}"></td>
                         <td th:text="${enrollment.student.email}"></td>
                         <td th:text="${enrollment.enrollmentDate}"></td>
@@ -144,9 +147,11 @@
                     </tr>
                 </tbody>
             </table>
-            
-            <p th:if="${!enrollments or enrollments.size() == 0}" style="margin-top: 20px; color: #999;">No students enrolled in this course yet.</p>
+
+            <p th:if="${enrollments == null or enrollments.isEmpty()}" style="margin-top: 20px; color: #999;">No
+                students enrolled in this course yet.</p>
         </div>
     </div>
 </body>
+
 </html>

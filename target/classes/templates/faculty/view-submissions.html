@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submissions - Faculty</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a2a3a 0%, #0d1b2a 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #56c8f5;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(86, 200, 245, 0.1);
+            color: #56c8f5;
+            border-right: 3px solid #56c8f5;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #56c8f5;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #8892b0;
+            font-size: 14px;
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26, 42, 58, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: rgba(86, 200, 245, 0.15);
+            padding: 12px;
+            text-align: left;
+            color: #56c8f5;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .status-SUBMITTED {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+
+        .status-GRADED {
+            background: rgba(39, 174, 96, 0.2);
+            color: #2ecc71;
+        }
+
+        .status-LATE {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .grade-form {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .grade-form input {
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            color: #fff;
+            width: 70px;
+            font-size: 13px;
+        }
+
+        .grade-form button {
+            padding: 6px 12px;
+            background: #27ae60;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.15);
+            color: #2ecc71;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+        }
+
+        .back-link a {
+            color: #56c8f5;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Faculty Panel</small>
+        </div>
+        <a th:href="@{/faculty/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/faculty/assignments}" class="active"><i class="fas fa-tasks"></i> Assignments</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <div class="back-link"><a th:href="@{/faculty/assignments}"><i class="fas fa-arrow-left"></i> Back to
+                Assignments</a></div>
+        <h1 th:text="${assignment.title}"></h1>
+        <h2
+            th:text="${assignment.course.courseName + ' | Due: ' + #temporals.format(assignment.dueDate, 'dd MMM yyyy')}">
+        </h2>
+        <div th:if="${success}" class="alert-success" th:text="${success}"></div>
+        <table th:if="${submissions != null and !submissions.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>File</th>
+                    <th>Grade</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="s : ${submissions}">
+                    <td th:text="${s.student.firstName + ' ' + s.student.lastName}"></td>
+                    <td th:text="${#temporals.format(s.submittedAt, 'dd MMM HH:mm')}"></td>
+                    <td><span class="status-badge" th:classappend="'status-' + ${s.status}"
+                            th:text="${s.status}"></span></td>
+                    <td><a th:if="${s.filePath != null}" th:href="@{/{path}(path=${s.filePath})}"
+                            style="color:#56c8f5">Download</a></td>
+                    <td th:text="${s.grade != null ? s.grade : '-'}"></td>
+                    <td>
+                        <form th:action="@{/faculty/assignments/{aid}/grade/{sid}(aid=${assignment.id}, sid=${s.id})}"
+                            method="post" class="grade-form">
+                            <input type="number" name="grade" step="0.5" min="0" th:max="${assignment.maxMarks}"
+                                th:value="${s.grade}" placeholder="Score" required>
+                            <input type="text" name="feedback" placeholder="Feedback" style="width:120px"
+                                th:value="${s.feedback}">
+                            <button type="submit"><i class="fas fa-check"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${submissions == null or submissions.isEmpty()}" style="color:#666; text-align:center; padding:40px;">
+            No submissions yet.</p>
+    </div>
+</body>
+
+</html>

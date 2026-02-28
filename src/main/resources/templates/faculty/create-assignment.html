@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Assignment - Faculty</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a2a3a 0%, #0d1b2a 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #56c8f5;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(86, 200, 245, 0.1);
+            color: #56c8f5;
+            border-right: 3px solid #56c8f5;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+            max-width: 700px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #56c8f5;
+            margin-bottom: 30px;
+        }
+
+        .form-card {
+            background: rgba(26, 42, 58, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ccc;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .form-group select option {
+            background: #1a2a3a;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .btn-submit {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #56c8f5, #4a9fd4);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Faculty Panel</small>
+        </div>
+        <a th:href="@{/faculty/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/faculty/assignments}" class="active"><i class="fas fa-tasks"></i> Assignments</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <h1><i class="fas fa-plus-circle"></i> Create Assignment</h1>
+        <div class="form-card">
+            <form th:action="@{/faculty/assignments/create}" method="post" enctype="multipart/form-data">
+                <div class="form-group"><label>Title</label><input name="title" placeholder="Assignment title" required>
+                </div>
+                <div class="form-group"><label>Description</label><textarea name="description"
+                        placeholder="Instructions for students..."></textarea></div>
+                <div class="form-group">
+                    <label>Course</label>
+                    <select name="courseId" required>
+                        <option value="">Select course...</option>
+                        <option th:each="c : ${courses}" th:value="${c.id}"
+                            th:text="${c.courseCode + ' - ' + c.courseName}"></option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="form-group"><label>Due Date</label><input type="date" name="dueDate" required></div>
+                    <div class="form-group"><label>Max Marks</label><input type="number" name="maxMarks" value="100"
+                            min="1"></div>
+                </div>
+                <div class="form-group"><label>Attachment (Optional)</label><input type="file" name="file"
+                        accept=".pdf,.doc,.docx,.png,.jpg"></div>
+                <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Create</button>
+                <a th:href="@{/faculty/assignments}" class="btn-cancel">Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

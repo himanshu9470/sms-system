@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg-dark: #0f172a;
+            --bg-sidebar: #111827;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-sky: #0ea5e9;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-sidebar);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--accent-sky), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(14, 165, 233, 0.08);
+            border-left-color: rgba(14, 165, 233, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(14, 165, 233, 0.12);
+            border-left-color: var(--accent-sky)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
+        }
+
+        .content-area {
+            padding: 1.5rem 2rem
+        }
+
+        .card-custom {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden
+        }
+
+        .card-custom .card-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .card-custom .card-header h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin: 0
+        }
+
+        .table {
+            font-size: 0.875rem
+        }
+
+        .table thead th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 1rem
+        }
+
+        .table tbody td {
+            padding: 0.85rem 1rem;
+            vertical-align: middle;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f1f5f9
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-muted)
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--accent-sky);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1)
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent-emerald), #059669);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            color: white
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            border: 1px solid #e2e8f0;
+            padding: 0.55rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+            color: var(--text-dark)
+        }
+
+        .status-select {
+            width: 120px
+        }
+
+        .alert-info-custom {
+            background: rgba(14, 165, 233, 0.08);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            color: var(--accent-sky);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            font-size: 0.875rem
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted)
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Faculty Panel</small>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div><a class="nav-link" th:href="@{/faculty/dashboard}"><i
+                    class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Teaching</div><a class="nav-link active" th:href="@{/faculty/courses}"><i
+                    class="fas fa-book-open"></i> My Courses</a>
+            <div class="nav-section">Account</div><a class="nav-link" th:href="@{/logout}"><i
+                    class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-check-circle me-2" style="color:var(--accent-emerald)"></i>Mark Attendance</h1>
+            <a th:href="@{/faculty/courses}" class="btn-back"><i class="fas fa-arrow-left me-2"></i>Back</a>
+        </div>
+        <div class="content-area">
+            <div th:if="${alreadyMarked}" class="alert-info-custom mb-4">
+                <i class="fas fa-info-circle me-2"></i>Attendance for today has already been marked for this course.
+                Submitting again will create duplicate records.
+            </div>
+            <div class="card-custom">
+                <div class="card-header">
+                    <h5><i class="fas fa-clipboard-check me-2" style="color:var(--accent-emerald)"></i><span
+                            th:text="${course.courseName}">Course</span> — <span
+                            th:text="${course.courseCode}">CODE</span></h5>
+                </div>
+                <div class="card-body p-0">
+                    <div th:if="${enrollments != null and !enrollments.isEmpty()}">
+                        <form th:action="@{/faculty/attendance/mark/{id}(id=${course.id})}" method="POST">
+                            <div class="px-3 pt-3">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" class="form-control" name="date" th:value="${today}"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive mt-3">
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Student ID</th>
+                                            <th>Student Name</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="enrollment, iter : ${enrollments}">
+                                            <td th:text="${iter.count}"></td>
+                                            <td>
+                                                <span th:text="${enrollment.student.studentId}"></span>
+                                                <input type="hidden" name="studentIds"
+                                                    th:value="${enrollment.student.studentId}">
+                                            </td>
+                                            <td class="fw-semibold"
+                                                th:text="${enrollment.student.firstName + ' ' + enrollment.student.lastName}">
+                                            </td>
+                                            <td>
+                                                <select name="statuses" class="form-select status-select">
+                                                    <option value="PRESENT" selected>✅ Present</option>
+                                                    <option value="ABSENT">❌ Absent</option>
+                                                    <option value="LATE">⏰ Late</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="p-3 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-submit"><i class="fas fa-save me-2"></i>Submit
+                                    Attendance</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div th:if="${enrollments == null or enrollments.isEmpty()}" class="empty-state">
+                        <i class="fas fa-users-slash"></i>
+                        <h5>No Students Enrolled</h5>
+                        <p>No students are enrolled in this course yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

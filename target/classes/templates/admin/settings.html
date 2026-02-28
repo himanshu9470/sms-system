@@ -1,274 +1,358 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Admin</title>
+    <title>Settings - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b
+        }
+
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
         }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-dark);
             color: white;
-            padding: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.08);
+            border-left-color: rgba(99, 102, 241, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.12);
+            border-left-color: var(--primary)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
         }
-        
-        .header h1 {
-            font-size: 28px;
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
         }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-            transition: 0.3s;
+
+        .content-area {
+            padding: 1.5rem 2rem
         }
-        
-        .btn-primary {
-            background: #667eea;
-            color: white;
+
+        .settings-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+            overflow: hidden
         }
-        
-        .btn-primary:hover {
-            background: #764ba2;
+
+        .settings-card .card-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.25rem 1.5rem
         }
-        
-        .content {
-            padding: 40px;
+
+        .settings-card .card-header h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin: 0
         }
-        
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
+
+        .settings-card .card-body {
+            padding: 1.5rem
         }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px
         }
-        
-        .settings-section {
-            margin-bottom: 30px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 20px;
+
+        .form-control,
+        .form-select {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s
         }
-        
-        .settings-section h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 18px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1)
         }
-        
-        .form-group {
-            margin-bottom: 20px;
+
+        .form-text {
+            font-size: 0.75rem;
+            color: var(--text-muted)
         }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-        }
-        
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-        }
-        
-        .description {
-            color: #666;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        
+
         .btn-submit {
-            background: #27ae60;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 12px 30px;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s
         }
-        
+
         .btn-submit:hover {
-            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            color: white
         }
-        
-        .settings-info {
-            background: #f0f4f8;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
+
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+            font-size: 0.875rem
         }
-        
-        .settings-info h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-        
-        .settings-info p {
-            color: #666;
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>System Settings</h1>
-            <a href="/admin/dashboard" class="btn btn-primary">Back to Dashboard</a>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Administration Panel</small>
         </div>
-        
-        <div class="content">
-            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-            
-            <form method="POST" action="/admin/settings/update">
-                <!-- Academic Settings -->
-                <div class="settings-section">
-                    <h2>Academic Settings</h2>
-                    
-                    <div class="settings-info">
-                        <h3>Current Academic Period</h3>
-                        <p>Configure the current semester and academic year for course registrations</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="semester">Current Semester</label>
-                        <select id="semester" name="semester">
-                            <option value="">-- Select Semester --</option>
-                            <option value="Fall 2025">Fall 2025</option>
-                            <option value="Spring 2026">Spring 2026</option>
-                            <option value="Summer 2026">Summer 2026</option>
-                        </select>
-                        <div class="description">Select the current academic semester</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="academicYear">Academic Year</label>
-                        <input type="text" id="academicYear" name="academicYear" placeholder="e.g., 2025-2026" value="2025-2026">
-                        <div class="description">Enter the current academic year</div>
-                    </div>
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div><a class="nav-link" th:href="@{/admin/dashboard}"><i
+                    class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Management</div><a class="nav-link" th:href="@{/admin/students}"><i
+                    class="fas fa-users"></i> Students</a>
+            <a class="nav-link" th:href="@{/admin/courses}"><i class="fas fa-book-open"></i> Courses</a>
+            <a class="nav-link" th:href="@{/admin/enrollments}"><i class="fas fa-clipboard-list"></i> Enrollments</a>
+            <a class="nav-link" th:href="@{/admin/users}"><i class="fas fa-user-shield"></i> Users</a>
+            <div class="nav-section">Analytics</div><a class="nav-link" th:href="@{/admin/reports}"><i
+                    class="fas fa-chart-bar"></i> Reports</a>
+            <div class="nav-section">System</div><a class="nav-link active" th:href="@{/admin/settings}"><i
+                    class="fas fa-cog"></i> Settings</a>
+            <a class="nav-link" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-cog me-2" style="color:var(--primary)"></i>Settings</h1>
+        </div>
+        <div class="content-area">
+            <div th:if="${success}" class="alert alert-success alert-custom alert-dismissible fade show mb-4">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${success}"></span><button type="button"
+                    class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <form th:action="@{/admin/settings/update}" method="POST">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-calendar-alt me-2" style="color:var(--primary)"></i>Academic
+                                    Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Current Semester</label>
+                                        <select class="form-select" name="semester">
+                                            <option value="">Select Semester</option>
+                                            <option value="Fall 2025">Fall 2025</option>
+                                            <option value="Spring 2026">Spring 2026</option>
+                                            <option value="Summer 2026">Summer 2026</option>
+                                        </select>
+                                        <div class="form-text">Select the current academic semester</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Academic Year</label>
+                                        <input type="text" class="form-control" name="academicYear"
+                                            placeholder="e.g., 2025-2026" value="2025-2026">
+                                        <div class="form-text">Current academic year</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-sliders-h me-2" style="color:var(--accent-amber)"></i>Course
+                                    Management</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Registration Deadline (Days)</label>
+                                        <input type="number" class="form-control" name="registrationDeadline" min="0"
+                                            value="30">
+                                        <div class="form-text">Days from semester start until registration closes</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Max Courses Per Semester</label>
+                                        <input type="number" class="form-control" name="maxCoursesPerSemester" min="1"
+                                            value="6">
+                                        <div class="form-text">Maximum courses per student</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-star me-2" style="color:var(--accent-emerald)"></i>Grading Settings
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Grading Scale</label>
+                                        <select class="form-select" name="gradingScale">
+                                            <option value="A-F">A-F (4.0 scale)</option>
+                                            <option value="Percentage">Percentage (0-100)</option>
+                                            <option value="Pass-Fail">Pass/Fail</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Passing Grade</label>
+                                        <input type="text" class="form-control" name="passingGrade" value="D">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-building me-2" style="color:var(--accent-sky, #0ea5e9)"></i>System
+                                    Preferences</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Institution Name</label>
+                                    <input type="text" class="form-control" name="institutionName"
+                                        value="EduTech University">
+                                    <div class="form-text">Name of your educational institution</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mb-4">
+                            <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary"
+                                style="border-radius:10px;font-weight:600">Cancel</a>
+                            <button type="submit" class="btn btn-submit"><i class="fas fa-save me-2"></i>Save
+                                Settings</button>
+                        </div>
+                    </form>
                 </div>
-                
-                <!-- Course Management Settings -->
-                <div class="settings-section">
-                    <h2>Course Management</h2>
-                    
-                    <div class="settings-info">
-                        <h3>Course Configuration</h3>
-                        <p>Configure course registration deadlines and policies</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="registrationDeadline">Registration Deadline (Days)</label>
-                        <input type="number" id="registrationDeadline" name="registrationDeadline" min="0" placeholder="e.g., 30" value="30">
-                        <div class="description">Number of days from semester start until registration closes</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="maxCoursesPerSemester">Max Courses Per Semester</label>
-                        <input type="number" id="maxCoursesPerSemester" name="maxCoursesPerSemester" min="1" placeholder="e.g., 6" value="6">
-                        <div class="description">Maximum number of courses a student can register for</div>
-                    </div>
-                </div>
-                
-                <!-- Grading Settings -->
-                <div class="settings-section">
-                    <h2>Grading Settings</h2>
-                    
-                    <div class="settings-info">
-                        <h3>Grade Configuration</h3>
-                        <p>Configure grading scale and policies</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="gradingScale">Grading Scale</label>
-                        <select id="gradingScale" name="gradingScale">
-                            <option value="">-- Select Grading Scale --</option>
-                            <option value="A-F">A-F (4.0 scale)</option>
-                            <option value="Percentage">Percentage (0-100)</option>
-                            <option value="Pass-Fail">Pass/Fail</option>
-                        </select>
-                        <div class="description">Select the grading scale to be used</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="passingGrade">Passing Grade</label>
-                        <input type="text" id="passingGrade" name="passingGrade" placeholder="e.g., D or 40%" value="D">
-                        <div class="description">Minimum passing grade for courses</div>
-                    </div>
-                </div>
-                
-                <!-- System Preferences -->
-                <div class="settings-section">
-                    <h2>System Preferences</h2>
-                    
-                    <div class="settings-info">
-                        <h3>General Settings</h3>
-                        <p>Configure general system preferences</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="institutionName">Institution Name</label>
-                        <input type="text" id="institutionName" name="institutionName" placeholder="e.g., EduTech University" value="EduTech University">
-                        <div class="description">Name of your educational institution</div>
-                    </div>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" class="btn btn-submit">Save Settings</button>
-                    <a href="/admin/dashboard" class="btn btn-primary">Cancel</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

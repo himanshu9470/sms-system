@@ -9,30 +9,30 @@ import java.util.Optional;
 
 @Service
 public class CourseService {
-    
+
     @Autowired
     private CourseRepository courseRepository;
-    
+
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }
-    
+
     public Optional<Course> getCourseById(Long id) {
         return courseRepository.findById(id);
     }
-    
+
     public Optional<Course> getCourseByCourseCode(String courseCode) {
         return courseRepository.findByCourseCode(courseCode);
     }
-    
+
     public List<Course> getAllCourses() {
         return (List<Course>) courseRepository.findAll();
     }
-    
+
     public List<Course> searchCourses(String keyword) {
         return courseRepository.searchByCourseNameOrCode(keyword);
     }
-    
+
     public Course updateCourse(Long id, Course courseDetails) {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()) {
@@ -49,15 +49,24 @@ public class CourseService {
             if (courseDetails.getCredits() != null) {
                 existingCourse.setCredits(courseDetails.getCredits());
             }
+            if (courseDetails.getDepartment() != null) {
+                existingCourse.setDepartment(courseDetails.getDepartment());
+            }
+            if (courseDetails.getSemester() != null) {
+                existingCourse.setSemester(courseDetails.getSemester());
+            }
+            if (courseDetails.getMaxStudents() != null) {
+                existingCourse.setMaxStudents(courseDetails.getMaxStudents());
+            }
             return courseRepository.save(existingCourse);
         }
         return null;
     }
-    
+
     public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
     }
-    
+
     public long getTotalCourseCount() {
         return courseRepository.getTotalCourseCount();
     }

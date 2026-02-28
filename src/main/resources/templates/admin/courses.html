@@ -1,190 +1,371 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Management - Admin</title>
+    <title>Courses - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e
+        }
+
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
         }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-dark);
             color: white;
-            padding: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.08);
+            border-left-color: rgba(99, 102, 241, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.12);
+            border-left-color: var(--primary)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
         }
-        
-        .header h1 {
-            font-size: 28px;
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
         }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-            transition: 0.3s;
+
+        .content-area {
+            padding: 1.5rem 2rem
         }
-        
-        .btn-primary {
-            background: #667eea;
-            color: white;
+
+        .card-custom {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden
         }
-        
-        .btn-primary:hover {
-            background: #764ba2;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .btn-warning:hover {
-            background: #d68910;
-        }
-        
-        .alert {
-            padding: 15px;
-            margin: 15px;
-            border-radius: 5px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .content {
-            padding: 20px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background: #f8f9fa;
-            font-weight: bold;
-        }
-        
-        tr:hover {
-            background: #f5f5f5;
-        }
-        
-        .action-buttons {
+
+        .card-custom .card-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.25rem 1.5rem;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center
         }
-        
-        .action-buttons a, .action-buttons button {
-            padding: 6px 12px;
-            font-size: 12px;
+
+        .card-custom .card-header h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin: 0
         }
-        
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #667eea;
-            text-decoration: none;
+
+        .table {
+            font-size: 0.875rem
         }
-        
-        .back-link:hover {
-            text-decoration: underline;
+
+        .table thead th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 1rem
+        }
+
+        .table tbody td {
+            padding: 0.85rem 1rem;
+            vertical-align: middle;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f1f5f9
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            margin: 0 2px
+        }
+
+        .btn-action.edit {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary)
+        }
+
+        .btn-action.edit:hover {
+            background: var(--primary);
+            color: white
+        }
+
+        .btn-action.delete {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--accent-rose)
+        }
+
+        .btn-action.delete:hover {
+            background: var(--accent-rose);
+            color: white
+        }
+
+        .btn-action.view {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-amber)
+        }
+
+        .btn-action.view:hover {
+            background: var(--accent-amber);
+            color: white
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.55rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            color: white
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+            font-size: 0.875rem
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted)
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Course Management</h1>
-            <a href="/admin/dashboard" class="btn btn-primary">Back to Dashboard</a>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Administration Panel</small>
         </div>
-        
-        <div class="content">
-            <a href="/admin/courses/add" class="btn btn-primary">+ Add New Course</a>
-            
-            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
-            
-            <table th:if="${courses and courses.size() > 0}">
-                <thead>
-                    <tr>
-                        <th>Course Code</th>
-                        <th>Course Name</th>
-                        <th>Credits</th>
-                        <th>Description</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="course : ${courses}">
-                        <td th:text="${course.courseCode}"></td>
-                        <td th:text="${course.courseName}"></td>
-                        <td th:text="${course.credits}"></td>
-                        <td th:text="${#strings.abbreviate(course.description, 30)}"></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a th:href="@{/admin/courses/{id}/enrollments(id=${course.id})}" class="btn btn-warning">View Enrollments</a>
-                                <a th:href="@{/admin/courses/edit/{id}(id=${course.id})}" class="btn btn-primary">Edit</a>
-                                <a th:href="@{/admin/courses/delete/{id}(id=${course.id})}" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <p th:if="${!courses or courses.size() == 0}" style="margin-top: 20px; color: #999;">No courses found. <a href="/admin/courses/add">Create one now</a></p>
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div>
+            <a class="nav-link" th:href="@{/admin/dashboard}"><i class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Management</div>
+            <a class="nav-link" th:href="@{/admin/students}"><i class="fas fa-users"></i> Students</a>
+            <a class="nav-link" th:href="@{/admin/faculty}"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
+            <a class="nav-link" th:href="@{/admin/parents}"><i class="fas fa-user-friends"></i> Parents</a>
+            <a class="nav-link active" th:href="@{/admin/courses}"><i class="fas fa-book-open"></i> Courses</a>
+            <a class="nav-link" th:href="@{/admin/enrollments}"><i class="fas fa-clipboard-list"></i> Enrollments</a>
+            <a class="nav-link" th:href="@{/admin/users}"><i class="fas fa-user-shield"></i> Users</a>
+            <div class="nav-section">Analytics</div>
+            <a class="nav-link" th:href="@{/admin/reports}"><i class="fas fa-chart-bar"></i> Reports</a>
+            <div class="nav-section">System</div>
+            <a class="nav-link" th:href="@{/admin/settings}"><i class="fas fa-cog"></i> Settings</a>
+            <a class="nav-link" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-book-open me-2" style="color:var(--primary)"></i>Courses</h1>
+            <a th:href="@{/admin/courses/add}" class="btn btn-add"><i class="fas fa-plus me-2"></i>Add Course</a>
+        </div>
+        <div class="content-area">
+            <div th:if="${success}" class="alert alert-success alert-custom alert-dismissible fade show mb-4">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-custom alert-dismissible fade show mb-4">
+                <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div class="card-custom">
+                <div class="card-header">
+                    <h5><i class="fas fa-list me-2" style="color:var(--primary)"></i>All Courses</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" th:if="${courses != null and !courses.isEmpty()}">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Course Name</th>
+                                    <th>Credits</th>
+                                    <th>Department</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="course : ${courses}">
+                                    <td><span class="fw-semibold" th:text="${course.courseCode}"></span></td>
+                                    <td class="fw-semibold" th:text="${course.courseName}"></td>
+                                    <td th:text="${course.credits}"></td>
+                                    <td><span
+                                            style="padding:0.3rem 0.65rem;border-radius:6px;font-size:0.7rem;font-weight:600;background:rgba(16,185,129,0.1);color:var(--accent-emerald)"
+                                            th:text="${course.department ?: 'N/A'}"></span></td>
+                                    <td style="max-width:200px;color:var(--text-muted);font-size:0.8rem"
+                                        th:text="${course.description != null ? #strings.abbreviate(course.description, 40) : '-'}">
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/admin/courses/{id}/enrollments(id=${course.id})}"
+                                            class="btn-action view" title="Enrollments"><i class="fas fa-eye"></i></a>
+                                        <a th:href="@{/admin/courses/edit/{id}(id=${course.id})}"
+                                            class="btn-action edit" title="Edit"><i class="fas fa-pen"></i></a>
+                                        <a th:href="@{/admin/courses/delete/{id}(id=${course.id})}"
+                                            class="btn-action delete" onclick="return confirm('Delete this course?')"
+                                            title="Delete"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div th:if="${courses == null or courses.isEmpty()}" class="empty-state">
+                        <i class="fas fa-book-open"></i>
+                        <h5>No Courses Found</h5>
+                        <p>Get started by adding your first course.</p>
+                        <a th:href="@{/admin/courses/add}" class="btn btn-add mt-2"><i class="fas fa-plus me-2"></i>Add
+                            Course</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

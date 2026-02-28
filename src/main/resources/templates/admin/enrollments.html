@@ -1,48 +1,365 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>All Enrollments</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollments - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #1b1a2e;
+            --bg-dark: #0f172a;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-dark);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.08);
+            border-left-color: rgba(99, 102, 241, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.12);
+            border-left-color: var(--primary)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
+        }
+
+        .content-area {
+            padding: 1.5rem 2rem
+        }
+
+        .card-custom {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden
+        }
+
+        .card-custom .card-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .card-custom .card-header h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin: 0
+        }
+
+        .table {
+            font-size: 0.875rem
+        }
+
+        .table thead th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 1rem
+        }
+
+        .table tbody td {
+            padding: 0.85rem 1rem;
+            vertical-align: middle;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f1f5f9
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc
+        }
+
+        .badge-grade {
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600
+        }
+
+        .badge-na {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted)
+        }
+
+        .badge-graded {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-emerald)
+        }
+
+        .grade-form {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center
+        }
+
+        .grade-input {
+            width: 70px;
+            padding: 0.35rem 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            text-align: center
+        }
+
+        .grade-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1)
+        }
+
+        .btn-grade {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s
+        }
+
+        .btn-grade:hover {
+            background: var(--primary-dark)
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+            font-size: 0.875rem
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted)
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+        }
+    </style>
 </head>
+
 <body>
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>All Enrollments</h1>
-        <a th:href="@{/admin/dashboard}" class="btn btn-secondary">Back</a>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Administration Panel</small>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div>
+            <a class="nav-link" th:href="@{/admin/dashboard}"><i class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Management</div>
+            <a class="nav-link" th:href="@{/admin/students}"><i class="fas fa-users"></i> Students</a>
+            <a class="nav-link" th:href="@{/admin/faculty}"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
+            <a class="nav-link" th:href="@{/admin/parents}"><i class="fas fa-user-friends"></i> Parents</a>
+            <a class="nav-link" th:href="@{/admin/courses}"><i class="fas fa-book-open"></i> Courses</a>
+            <a class="nav-link active" th:href="@{/admin/enrollments}"><i class="fas fa-clipboard-list"></i>
+                Enrollments</a>
+            <a class="nav-link" th:href="@{/admin/users}"><i class="fas fa-user-shield"></i> Users</a>
+            <div class="nav-section">Analytics</div><a class="nav-link" th:href="@{/admin/reports}"><i
+                    class="fas fa-chart-bar"></i> Reports</a>
+            <div class="nav-section">System</div><a class="nav-link" th:href="@{/admin/settings}"><i
+                    class="fas fa-cog"></i> Settings</a>
+            <a class="nav-link" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-clipboard-list me-2" style="color:var(--primary)"></i>All Enrollments</h1>
+            <a th:href="@{/admin/enrollments/add}" class="btn btn-add"
+                style="background:var(--primary);color:white;padding:0.6rem 1.2rem;border-radius:8px;font-weight:600;text-decoration:none;"><i
+                    class="fas fa-plus me-2"></i>Assign Course</a>
+        </div>
+        <div class="content-area">
+            <div th:if="${success}" class="alert alert-success alert-custom alert-dismissible fade show mb-4">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${success}"></span><button type="button"
+                    class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div class="card-custom">
+                <div class="card-header">
+                    <h5><i class="fas fa-list me-2" style="color:var(--primary)"></i>Enrollment Records</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" th:if="${enrollments != null and !enrollments.isEmpty()}">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student</th>
+                                    <th>Course</th>
+                                    <th>Date</th>
+                                    <th>Grade</th>
+                                    <th>Update Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="enrollment : ${enrollments}">
+                                    <td><span class="fw-semibold" th:text="${enrollment.id}"></span></td>
+                                    <td class="fw-semibold"
+                                        th:text="${enrollment.student.firstName + ' ' + enrollment.student.lastName}">
+                                    </td>
+                                    <td th:text="${enrollment.course.courseName}"></td>
+                                    <td style="color:var(--text-muted)" th:text="${enrollment.enrollmentDate}"></td>
+                                    <td>
+                                        <span th:if="${enrollment.grade != null}" class="badge-grade badge-graded"
+                                            th:text="${enrollment.grade}"></span>
+                                        <span th:if="${enrollment.grade == null}"
+                                            class="badge-grade badge-na">N/A</span>
+                                    </td>
+                                    <td>
+                                        <form th:action="@{'/admin/enrollments/' + ${enrollment.id} + '/grade'}"
+                                            method="post" class="grade-form">
+                                            <input type="text" name="grade" class="grade-input" placeholder="A/B/C"
+                                                maxlength="2">
+                                            <button type="submit" class="btn-grade"><i
+                                                    class="fas fa-check"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div th:if="${enrollments == null or enrollments.isEmpty()}" class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h5>No Enrollments</h5>
+                        <p>No enrollment records found.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div th:if="${#lists.isEmpty(enrollments)}">
-        <p>No enrollments found.</p>
-    </div>
-
-    <table class="table table-striped" th:if="${!#lists.isEmpty(enrollments)}">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Student</th>
-            <th>Course</th>
-            <th>Grade</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="enrollment : ${enrollments}">
-            <td th:text="${enrollment.id}">1</td>
-            <td th:text="${enrollment.student.fullName}">Student Name</td>
-            <td th:text="${enrollment.course.title}">Course Title</td>
-            <td th:text="${enrollment.grade != null ? enrollment.grade : 'N/A'}">N/A</td>
-            <td>
-                <form th:action="@{'/admin/enrollments/' + ${enrollment.id} + '/grade'}" method="post" class="d-inline">
-                    <input type="text" name="grade" placeholder="Grade" class="form-control d-inline-block" style="width:90px;" />
-                    <button class="btn btn-primary btn-sm" type="submit">Update</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Management - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-right: 3px solid #667eea;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-add {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .day-section {
+            margin-bottom: 30px;
+        }
+
+        .day-section h3 {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        th {
+            background: rgba(102, 126, 234, 0.15);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .btn-delete {
+            color: #e74c3c;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.15);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+            color: #2ecc71;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Admin Panel</small>
+        </div>
+        <a th:href="@{/admin/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/admin/students}"><i class="fas fa-user-graduate"></i> Students</a>
+        <a th:href="@{/admin/courses}"><i class="fas fa-book"></i> Courses</a>
+        <a th:href="@{/admin/faculty}"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
+        <a th:href="@{/admin/timetable}" class="active"><i class="fas fa-calendar-alt"></i> Timetable</a>
+        <a th:href="@{/admin/attendance}"><i class="fas fa-clipboard-check"></i> Attendance</a>
+        <a th:href="@{/admin/parents}"><i class="fas fa-users"></i> Parents</a>
+        <a th:href="@{/admin/enrollments}"><i class="fas fa-clipboard-list"></i> Enrollments</a>
+        <a th:href="@{/admin/reports}"><i class="fas fa-chart-bar"></i> Reports</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <div class="page-header">
+            <h1><i class="fas fa-calendar-alt"></i> Timetable Management</h1>
+            <a th:href="@{/admin/timetable/add}" class="btn-add"><i class="fas fa-plus"></i> Add Entry</a>
+        </div>
+        <div th:if="${success}" class="alert-success" th:text="${success}"></div>
+        <div th:each="entry : ${timetableByDay}">
+            <div class="day-section">
+                <h3 th:text="${entry.key}"></h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Faculty</th>
+                            <th>Time</th>
+                            <th>Room</th>
+                            <th>Section</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="slot : ${entry.value}">
+                            <td th:text="${slot.course.courseName}"></td>
+                            <td th:text="${slot.faculty != null ? slot.faculty.fullName : 'N/A'}"></td>
+                            <td th:text="${slot.startTime + ' - ' + slot.endTime}"></td>
+                            <td th:text="${slot.room}"></td>
+                            <td th:text="${slot.section}"></td>
+                            <td><a th:href="@{/admin/timetable/delete/{id}(id=${slot.id})}" class="btn-delete"
+                                    onclick="return confirm('Delete this entry?')"><i class="fas fa-trash"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p th:if="${#maps.isEmpty(timetableByDay)}" style="color:#666; text-align:center; padding:40px;">No timetable
+            entries yet. Click "Add Entry" to create one.</p>
+    </div>
+</body>
+
+</html>

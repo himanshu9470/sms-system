@@ -2,28 +2,499 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Student Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTech - Student Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #0f172a;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); overflow-x: hidden; }
+
+        /* Navbar */
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+            padding: 1rem 0;
+            transition: all 0.3s;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .navbar-custom .nav-link {
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            margin: 0 0.5rem;
+        }
+        .navbar-custom .nav-link:hover { color: var(--text-primary); }
+        .btn-nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white !important;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            color: white !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+        .hero-content { position: relative; z-index: 2; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        .hero-badge i { margin-right: 0.5rem; }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 540px;
+            margin-bottom: 2rem;
+        }
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn-hero-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+        .btn-hero-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            padding: 0.85rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-hero-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+        .hero-visual {
+            position: relative;
+            z-index: 2;
+        }
+        .dashboard-preview {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .preview-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .preview-dot.red { background: #f43f5e; }
+        .preview-dot.yellow { background: #f59e0b; }
+        .preview-dot.green { background: #10b981; }
+        .preview-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .preview-stat {
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .preview-stat .number {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .preview-stat .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Features */
+        .features-section {
+            padding: 6rem 0;
+            position: relative;
+        }
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 600px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .feature-icon.indigo { background: rgba(99, 102, 241, 0.15); color: var(--primary); }
+        .feature-icon.emerald { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+        .feature-icon.amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+        .feature-icon.rose { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); }
+        .feature-card h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .feature-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
+
+        /* Stats */
+        .stats-section {
+            padding: 5rem 0;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.05) 0%, transparent 100%);
+        }
+        .stat-item { text-align: center; }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.25rem; }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid rgba(148, 163, 184, 0.08);
+            padding: 3rem 0 1.5rem;
+        }
+        .footer-brand {
+            font-weight: 800;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .footer p { color: var(--text-secondary); font-size: 0.9rem; }
+        .footer-bottom {
+            border-top: 1px solid rgba(148, 163, 184, 0.08);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.25rem; }
+            .hero-desc { font-size: 1rem; }
+            .hero-visual { margin-top: 3rem; }
+            .stat-number { font-size: 2rem; }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
-            <a class="navbar-brand" th:href="@{/}">Student Management System</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" th:href="@{/login}">Login</a>
-                <a class="nav-link" th:href="@{/register}">Register</a>
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="fas fa-graduation-cap me-2"></i>EduTech SMS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#stats">Stats</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/login}">Sign In</a></li>
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-nav" th:href="@{/register}">Get Started</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <div class="jumbotron">
-            <h1 class="display-4">Welcome to Student Management System</h1>
-            <p class="lead">Manage students, courses, and enrollments efficiently.</p>
-            <a class="btn btn-primary btn-lg" th:href="@{/login}" role="button">Get Started</a>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-sparkles"></i>
+                        Student Management System v2.0
+                    </div>
+                    <h1 class="hero-title">
+                        Manage Your <span>Academic</span> Institution Effortlessly
+                    </h1>
+                    <p class="hero-desc">
+                        A powerful, intuitive platform to manage students, courses, enrollments, and academic records. Built for modern educational institutions.
+                    </p>
+                    <div class="hero-buttons">
+                        <a th:href="@{/register}" class="btn-hero-primary">
+                            <i class="fas fa-rocket"></i> Get Started Free
+                        </a>
+                        <a th:href="@{/login}" class="btn-hero-secondary">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 hero-visual">
+                    <div class="dashboard-preview">
+                        <div class="preview-header">
+                            <div class="preview-dot red"></div>
+                            <div class="preview-dot yellow"></div>
+                            <div class="preview-dot green"></div>
+                            <span style="color: var(--text-secondary); font-size: 0.8rem; margin-left: 0.5rem;">Dashboard Preview</span>
+                        </div>
+                        <div class="preview-stats">
+                            <div class="preview-stat">
+                                <div class="number">1,250</div>
+                                <div class="label">Active Students</div>
+                            </div>
+                            <div class="preview-stat">
+                                <div class="number">85</div>
+                                <div class="label">Courses</div>
+                            </div>
+                            <div class="preview-stat">
+                                <div class="number">3,400</div>
+                                <div class="label">Enrollments</div>
+                            </div>
+                            <div class="preview-stat">
+                                <div class="number">98%</div>
+                                <div class="label">Success Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="section-label">Features</span>
+                <h2 class="section-title">Everything You Need</h2>
+                <p class="section-desc mx-auto">Comprehensive tools to manage every aspect of your academic institution.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon indigo"><i class="fas fa-users"></i></div>
+                        <h4>Student Management</h4>
+                        <p>Add, edit, and track student records with detailed profiles, departments, and academic performance.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon emerald"><i class="fas fa-book-open"></i></div>
+                        <h4>Course Catalog</h4>
+                        <p>Create and manage courses with credit hours, departments, and enrollment capacity limits.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon amber"><i class="fas fa-clipboard-list"></i></div>
+                        <h4>Enrollment Tracking</h4>
+                        <p>Manage student course registrations, grading, and academic records in one place.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card">
+                        <div class="feature-icon rose"><i class="fas fa-chart-pie"></i></div>
+                        <h4>Reports & Analytics</h4>
+                        <p>Generate comprehensive reports on students, courses, and academic performance metrics.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section" id="stats">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Students Managed</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Courses Available</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Departments</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="footer-brand mb-2"><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</div>
+                    <p>A modern student management platform built for educational institutions.</p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white mb-3">Quick Links</h6>
+                    <p><a th:href="@{/login}" class="text-decoration-none" style="color: var(--text-secondary);">Sign In</a></p>
+                    <p><a th:href="@{/register}" class="text-decoration-none" style="color: var(--text-secondary);">Register</a></p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white mb-3">Contact</h6>
+                    <p style="color: var(--text-secondary);"><i class="fas fa-envelope me-2"></i>admin@edutech.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 EduTech Student Management System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,23 +11,23 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -35,11 +36,11 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .header h1 {
             font-size: 28px;
         }
-        
+
         .btn {
             padding: 10px 20px;
             border: none;
@@ -50,139 +51,150 @@
             display: inline-block;
             transition: 0.3s;
         }
-        
+
         .btn-primary {
             background: #667eea;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #764ba2;
         }
-        
+
         .content {
             padding: 40px;
         }
-        
+
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-        
+
         .summary-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 25px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .summary-card h3 {
             font-size: 14px;
             margin-bottom: 10px;
             opacity: 0.9;
         }
-        
+
         .summary-card .number {
             font-size: 36px;
             font-weight: bold;
         }
-        
+
         .print-btn {
             background: #27ae60;
             color: white;
             margin-bottom: 20px;
         }
-        
+
         .print-btn:hover {
             background: #229954;
         }
-        
+
         h2 {
             color: #333;
             margin-top: 30px;
             margin-bottom: 15px;
         }
-        
+
         .summary-section {
             background: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
             border-left: 4px solid #667eea;
         }
-        
+
         .summary-section p {
             color: #666;
             margin-bottom: 10px;
             font-size: 16px;
         }
-        
+
         .summary-section strong {
             color: #333;
         }
-        
+
         @media print {
-            .print-btn, .header {
+
+            .print-btn,
+            .header {
                 display: none;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>Academic Summary</h1>
             <div>
                 <button class="btn print-btn" onclick="window.print()">Print Report</button>
-                <a href="/admin/reports" class="btn btn-primary">Back to Reports</a>
+                <a th:href="@{/admin/reports}" class="btn btn-primary">Back to Reports</a>
             </div>
         </div>
-        
+
         <div class="content">
             <h2>Key Academic Metrics</h2>
-            
+
             <div class="summary-grid">
                 <div class="summary-card">
                     <h3>Total Students</h3>
                     <div class="number" th:text="${studentCount}"></div>
                 </div>
-                
+
                 <div class="summary-card">
                     <h3>Total Courses</h3>
                     <div class="number" th:text="${courseCount}"></div>
                 </div>
-                
+
                 <div class="summary-card">
                     <h3>Total Enrollments</h3>
                     <div class="number" th:text="${totalEnrollments}"></div>
                 </div>
-                
+
                 <div class="summary-card">
                     <h3>Pending Grades</h3>
                     <div class="number" th:text="${ungradedEnrollments}"></div>
                 </div>
             </div>
-            
+
             <h2>Academic Overview</h2>
-            
+
             <div class="summary-section">
                 <p><strong>Total Student Population:</strong> <span th:text="${studentCount}"></span> students</p>
                 <p><strong>Course Offerings:</strong> <span th:text="${courseCount}"></span> courses available</p>
-                <p><strong>Active Enrollments:</strong> <span th:text="${totalEnrollments}"></span> total enrollments</p>
-                <p><strong>Grading Status:</strong> <span th:text="${ungradedEnrollments}"></span> enrollments pending grades</p>
+                <p><strong>Active Enrollments:</strong> <span th:text="${totalEnrollments}"></span> total enrollments
+                </p>
+                <p><strong>Grading Status:</strong> <span th:text="${ungradedEnrollments}"></span> enrollments pending
+                    grades</p>
             </div>
-            
+
             <h2>Statistics</h2>
-            
+
             <div class="summary-section">
-                <p><strong>Average Enrollments per Course:</strong> <span th:text="${courseCount > 0 ? (totalEnrollments / courseCount).toString().substring(0, 5) : '0'}"></span></p>
-                <p><strong>Graded Enrollments:</strong> <span th:text="${totalEnrollments - ungradedEnrollments}"></span></p>
-                <p><strong>Grading Completion Rate:</strong> <span th:text="${totalEnrollments > 0 ? ((totalEnrollments - ungradedEnrollments) * 100 / totalEnrollments).toString().substring(0, 5) : '0'}"></span>%</p>
+                <p><strong>Average Enrollments per Course:</strong> <span
+                        th:text="${courseCount > 0 ? (totalEnrollments / courseCount).toString().substring(0, 5) : '0'}"></span>
+                </p>
+                <p><strong>Graded Enrollments:</strong> <span
+                        th:text="${totalEnrollments - ungradedEnrollments}"></span></p>
+                <p><strong>Grading Completion Rate:</strong> <span
+                        th:text="${totalEnrollments > 0 ? ((totalEnrollments - ungradedEnrollments) * 100 / totalEnrollments).toString().substring(0, 5) : '0'}"></span>%
+                </p>
             </div>
         </div>
     </div>
 </body>
+
 </html>

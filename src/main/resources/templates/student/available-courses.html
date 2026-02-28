@@ -1,251 +1,310 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Courses - Student</title>
+    <title>Available Courses - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e
+        }
+
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
         }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-dark);
             color: white;
-            padding: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.08);
+            border-left-color: rgba(99, 102, 241, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.12);
+            border-left-color: var(--primary)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
         }
-        
-        .header h1 {
-            font-size: 28px;
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
         }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-            transition: 0.3s;
+
+        .content-area {
+            padding: 1.5rem 2rem
         }
-        
-        .btn-primary {
-            background: #667eea;
-            color: white;
-            margin-left: 10px;
-        }
-        
-        .btn-primary:hover {
-            background: #764ba2;
-        }
-        
-        .btn-success {
-            background: #27ae60;
-            color: white;
-            padding: 8px 16px;
-            font-size: 12px;
-        }
-        
-        .btn-success:hover {
-            background: #229954;
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-            color: white;
-            padding: 8px 16px;
-            font-size: 12px;
-        }
-        
-        .btn-warning:hover {
-            background: #d68910;
-        }
-        
-        .alert {
-            padding: 15px;
-            margin: 15px;
-            border-radius: 5px;
-        }
-        
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .content {
-            padding: 20px;
-        }
-        
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #ddd;
-            margin-bottom: 20px;
-        }
-        
-        .tab {
-            padding: 15px 20px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            color: #666;
-            transition: 0.3s;
-        }
-        
-        .tab:hover {
-            color: #667eea;
-        }
-        
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
+
         .course-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #f9f9f9;
+            background: var(--bg-card);
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            height: 100%
         }
-        
-        .course-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            border-color: var(--primary)
         }
-        
-        .course-info {
-            margin-bottom: 10px;
-            color: #666;
+
+        .course-code {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            margin-bottom: 0.75rem
         }
-        
-        .course-info strong {
-            color: #333;
+
+        .course-card h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem
         }
-        
-        .course-actions {
+
+        .course-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1rem
+        }
+
+        .course-meta {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-muted)
+        }
+
+        .course-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem
+        }
+
+        .btn-enroll {
+            background: linear-gradient(135deg, var(--accent-emerald), #059669);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            width: 100%;
+            transition: all 0.3s
+        }
+
+        .btn-enroll:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+            color: white
+        }
+
+        .btn-enroll:disabled {
+            background: #e2e8f0;
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+            font-size: 0.875rem
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted)
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Course Registration</h1>
-            <a href="/student/dashboard" class="btn btn-primary">Back to Dashboard</a>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Student Portal</small>
         </div>
-        
-        <div class="content">
-            <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
-            
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab(event, 'available')">Available Courses</div>
-                <div class="tab" onclick="switchTab(event, 'enrolled')">My Enrolled Courses</div>
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div>
+            <a class="nav-link" th:href="@{/student/dashboard}"><i class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Academics</div>
+            <a class="nav-link active" th:href="@{/student/courses}"><i class="fas fa-book-open"></i> Available
+                Courses</a>
+            <a class="nav-link" th:href="@{/student/my-courses}"><i class="fas fa-bookmark"></i> My Courses</a>
+            <div class="nav-section">Account</div>
+            <a class="nav-link" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-book-open me-2" style="color:var(--primary)"></i>Available Courses</h1>
+        </div>
+        <div class="content-area">
+            <div th:if="${success}" class="alert alert-success alert-custom alert-dismissible fade show mb-4">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${success}"></span><button type="button"
+                    class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            
-            <!-- Available Courses Tab -->
-            <div id="available" class="tab-content active">
-                <h2 style="margin-bottom: 20px;">Available Courses</h2>
-                
-                <div th:if="${courses and courses.size() > 0}">
-                    <div th:each="course : ${courses}" class="course-card">
-                        <h3 th:text="${course.courseName}"></h3>
-                        <div class="course-info">
-                            <p><strong>Course Code:</strong> <span th:text="${course.courseCode}"></span></p>
-                            <p><strong>Credits:</strong> <span th:text="${course.credits}"></span></p>
-                            <p><strong>Description:</strong> <span th:text="${course.description}"></span></p>
+            <div th:if="${error}" class="alert alert-danger alert-custom alert-dismissible fade show mb-4">
+                <i class="fas fa-exclamation-triangle me-2"></i><span th:text="${error}"></span><button type="button"
+                    class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div class="row g-4" th:if="${courses != null and !courses.isEmpty()}">
+                <div class="col-md-6 col-lg-4" th:each="course : ${courses}">
+                    <div class="course-card">
+                        <span class="course-code" th:text="${course.courseCode}"></span>
+                        <h5 th:text="${course.courseName}"></h5>
+                        <p th:text="${course.description ?: 'No description available.'}"></p>
+                        <div class="course-meta">
+                            <span><i class="fas fa-star"></i> <span th:text="${course.credits}"></span> Credits</span>
+                            <span th:if="${course.department != null}"><i class="fas fa-building"></i> <span
+                                    th:text="${course.department}"></span></span>
                         </div>
-                        <div class="course-actions">
-                            <form th:action="@{/student/courses/register/{courseId}(courseId=${course.id})}" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-success" th:disabled="${enrolledCourses != null and enrolledCourses.?[course.id].size() > 0}">
-                                    Register
-                                </button>
-                            </form>
-                        </div>
+                        <form th:action="@{/student/courses/register/{id}(id=${course.id})}" method="post">
+                            <button type="submit" class="btn btn-enroll"
+                                th:disabled="${enrolledCourseIds != null and enrolledCourseIds.contains(course.id)}"
+                                th:text="${enrolledCourseIds != null and enrolledCourseIds.contains(course.id) ? '✓ Already Enrolled' : 'Enroll Now'}">
+                            </button>
+                        </form>
                     </div>
                 </div>
-                
-                <p th:if="${!courses or courses.size() == 0}" style="color: #999;">No courses available.</p>
             </div>
-            
-            <!-- Enrolled Courses Tab -->
-            <div id="enrolled" class="tab-content">
-                <h2 style="margin-bottom: 20px;">My Enrolled Courses</h2>
-                
-                <div th:if="${enrolledCourses and enrolledCourses.size() > 0}">
-                    <div th:each="enrollment : ${enrolledCourses}" class="course-card">
-                        <h3 th:text="${enrollment.course.courseName}"></h3>
-                        <div class="course-info">
-                            <p><strong>Course Code:</strong> <span th:text="${enrollment.course.courseCode}"></span></p>
-                            <p><strong>Credits:</strong> <span th:text="${enrollment.course.credits}"></span></p>
-                            <p><strong>Enrollment Date:</strong> <span th:text="${enrollment.enrollmentDate}"></span></p>
-                            <p><strong>Grade:</strong> <span th:text="${enrollment.grade != null ? enrollment.grade : 'Not Graded'}"></span></p>
-                        </div>
-                        <div class="course-actions">
-                            <form th:action="@{/student/courses/drop/{enrollmentId}(enrollmentId=${enrollment.id})}" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to drop this course?');">Drop Course</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                
-                <p th:if="${!enrolledCourses or enrolledCourses.size() == 0}" style="color: #999;">You are not enrolled in any courses yet.</p>
+            <div th:if="${courses == null or courses.isEmpty()}" class="empty-state">
+                <i class="fas fa-book-open"></i>
+                <h5>No Courses Available</h5>
+                <p>No courses are currently available for registration.</p>
             </div>
         </div>
     </div>
-    
-    <script>
-        function switchTab(event, tabName) {
-            // Hide all tab contents
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
-            
-            // Remove active class from all tabs
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // Show the selected tab content
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

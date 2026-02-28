@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable - Faculty</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a2a3a 0%, #0d1b2a 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #56c8f5;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(86, 200, 245, 0.1);
+            color: #56c8f5;
+            border-right: 3px solid #56c8f5;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #56c8f5;
+            margin-bottom: 30px;
+        }
+
+        .day-section {
+            margin-bottom: 25px;
+        }
+
+        .day-section h3 {
+            color: #56c8f5;
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(86, 200, 245, 0.3);
+        }
+
+        .slot {
+            background: rgba(26, 42, 58, 0.8);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #56c8f5;
+        }
+
+        .slot-info h4 {
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .slot-info p {
+            color: #8892b0;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .slot-time {
+            color: #56c8f5;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Faculty Panel</small>
+        </div>
+        <a th:href="@{/faculty/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/faculty/courses}"><i class="fas fa-book"></i> Courses</a>
+        <a th:href="@{/faculty/timetable}" class="active"><i class="fas fa-calendar-alt"></i> Timetable</a>
+        <a th:href="@{/faculty/assignments}"><i class="fas fa-tasks"></i> Assignments</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <h1><i class="fas fa-calendar-alt"></i> My Timetable</h1>
+        <div th:each="entry : ${timetableByDay}" class="day-section">
+            <h3 th:text="${entry.key}"></h3>
+            <div th:each="slot : ${entry.value}" class="slot">
+                <div class="slot-info">
+                    <h4 th:text="${slot.course.courseName}"></h4>
+                    <p><i class="fas fa-map-marker-alt"></i> <span th:text="${slot.room}"></span> &nbsp; <i
+                            class="fas fa-layer-group"></i> Section <span th:text="${slot.section}"></span></p>
+                </div>
+                <div class="slot-time" th:text="${slot.startTime + ' - ' + slot.endTime}"></div>
+            </div>
+        </div>
+        <p th:if="${timetableByDay == null or #maps.isEmpty(timetableByDay)}"
+            style="color:#666; text-align:center; padding:40px;">No timetable entries assigned to you.</p>
+    </div>
+</body>
+
+</html>

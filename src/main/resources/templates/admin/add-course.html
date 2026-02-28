@@ -1,149 +1,320 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Course - Admin</title>
+    <title>Add Course - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981
+        }
+
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
         }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-dark);
             color: white;
-            padding: 20px;
-        }
-        
-        .header h1 {
-            font-size: 24px;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-        }
-        
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 10px;
-            transition: 0.3s;
-        }
-        
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #764ba2;
-        }
-        
-        .btn-secondary {
-            background: #999;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #777;
-        }
-        
-        .button-group {
+            z-index: 1000;
             display: flex;
-            gap: 10px;
-            margin-top: 30px;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.08);
+            border-left-color: rgba(99, 102, 241, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.12);
+            border-left-color: var(--primary)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
+        }
+
+        .content-area {
+            padding: 1.5rem 2rem
+        }
+
+        .card-custom {
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden
+        }
+
+        .card-custom .card-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.25rem 1.5rem
+        }
+
+        .card-custom .card-header h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin: 0
+        }
+
+        .card-custom .card-body {
+            padding: 1.5rem
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1)
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            color: white
+        }
+
+        .btn-back {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            border: 1px solid #e2e8f0;
+            padding: 0.55rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s
+        }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+            color: var(--text-dark)
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Add New Course</h1>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Administration Panel</small>
         </div>
-        
-        <div class="content">
-            <form th:action="@{/admin/courses/add}" method="POST">
-                <div class="form-group">
-                    <label for="courseCode">Course Code <span style="color: red;">*</span></label>
-                    <input type="text" id="courseCode" name="courseCode" required placeholder="e.g., CS101">
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div><a class="nav-link" th:href="@{/admin/dashboard}"><i
+                    class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Management</div><a class="nav-link" th:href="@{/admin/students}"><i
+                    class="fas fa-users"></i> Students</a>
+            <a class="nav-link active" th:href="@{/admin/courses}"><i class="fas fa-book-open"></i> Courses</a>
+            <a class="nav-link" th:href="@{/admin/enrollments}"><i class="fas fa-clipboard-list"></i> Enrollments</a>
+            <a class="nav-link" th:href="@{/admin/users}"><i class="fas fa-user-shield"></i> Users</a>
+            <div class="nav-section">Analytics</div><a class="nav-link" th:href="@{/admin/reports}"><i
+                    class="fas fa-chart-bar"></i> Reports</a>
+            <div class="nav-section">System</div><a class="nav-link" th:href="@{/admin/settings}"><i
+                    class="fas fa-cog"></i> Settings</a>
+            <a class="nav-link" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-plus-circle me-2" style="color:var(--primary)"></i>Add Course</h1>
+            <a th:href="@{/admin/courses}" class="btn-back"><i class="fas fa-arrow-left me-2"></i>Back</a>
+        </div>
+        <div class="content-area">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="card-custom">
+                        <div class="card-header">
+                            <h5><i class="fas fa-book me-2" style="color:var(--primary)"></i>Course Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/admin/courses/add}" method="POST">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3"><label for="courseCode" class="form-label">Course Code
+                                            *</label><input type="text" class="form-control" id="courseCode"
+                                            name="courseCode" placeholder="e.g. CS101" required></div>
+                                    <div class="col-md-6 mb-3"><label for="credits" class="form-label">Credits
+                                            *</label><input type="number" class="form-control" id="credits"
+                                            name="credits" min="1" max="6" placeholder="e.g. 3" required></div>
+                                </div>
+                                <div class="mb-3"><label for="courseName" class="form-label">Course Name *</label><input
+                                        type="text" class="form-control" id="courseName" name="courseName"
+                                        placeholder="e.g. Introduction to Computer Science" required></div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="department" class="form-label">Department</label>
+                                        <select class="form-select" id="department" name="department">
+                                            <option value="">Select</option>
+                                            <option value="Computer Science">Computer Science</option>
+                                            <option value="Electrical Engineering">Electrical Engineering</option>
+                                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                            <option value="Civil Engineering">Civil Engineering</option>
+                                            <option value="Mathematics">Mathematics</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="semester" class="form-label">Semester</label>
+                                        <select class="form-select" id="semester" name="semester">
+                                            <option value="">Select</option>
+                                            <option th:each="i : ${#numbers.sequence(1,8)}" th:value="${i}"
+                                                th:text="${i}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3"><label for="maxStudents" class="form-label">Max Students</label><input
+                                        type="number" class="form-control" id="maxStudents" name="maxStudents"
+                                        value="60" min="1"></div>
+                                <div class="mb-3"><label for="description"
+                                        class="form-label">Description</label><textarea class="form-control"
+                                        id="description" name="description" rows="3"
+                                        placeholder="Course description..."></textarea></div>
+                                <div class="d-flex justify-content-end gap-2 mt-3">
+                                    <a th:href="@{/admin/courses}" class="btn-back">Cancel</a>
+                                    <button type="submit" class="btn btn-submit"><i class="fas fa-save me-2"></i>Save
+                                        Course</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="courseName">Course Name <span style="color: red;">*</span></label>
-                    <input type="text" id="courseName" name="courseName" required placeholder="e.g., Introduction to Computer Science">
-                </div>
-                
-                <div class="form-group">
-                    <label for="credits">Credits <span style="color: red;">*</span></label>
-                    <input type="number" id="credits" name="credits" required min="1" max="4" placeholder="e.g., 3">
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" placeholder="Enter course description..."></textarea>
-                </div>
-                
-                <div class="button-group">
-                    <button type="submit" class="btn btn-primary">Add Course</button>
-                    <a href="/admin/courses" class="btn btn-secondary" style="text-decoration: none; display: inline-block;">Cancel</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Details - Student</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #2ecc71;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+            border-right: 3px solid #2ecc71;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+            max-width: 800px;
+        }
+
+        .back-link {
+            margin-bottom: 20px;
+        }
+
+        .back-link a {
+            color: #2ecc71;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .detail-card {
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .detail-card h2 {
+            color: #fff;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .detail-card .course {
+            color: #8892b0;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-meta span {
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .detail-meta span i {
+            color: #2ecc71;
+            margin-right: 5px;
+        }
+
+        .description {
+            color: #b0bec5;
+            line-height: 1.7;
+            font-size: 14px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .submit-section {
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .submit-section h3 {
+            color: #2ecc71;
+            margin-bottom: 15px;
+        }
+
+        .file-input {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .btn-submit {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .grade-card {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grade-card h3 {
+            color: #9b59b6;
+        }
+
+        .grade-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.15);
+            color: #2ecc71;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Student Portal</small>
+        </div>
+        <a th:href="@{/student/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/student/assignments}" class="active"><i class="fas fa-tasks"></i> Assignments</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <div class="back-link"><a th:href="@{/student/assignments}"><i class="fas fa-arrow-left"></i> Back to
+                Assignments</a></div>
+        <div th:if="${success}" class="alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+        <div class="detail-card">
+            <h2 th:text="${assignment.title}"></h2>
+            <p class="course" th:text="${assignment.course.courseName}"></p>
+            <div class="detail-meta">
+                <span><i class="fas fa-calendar"></i> Due: <span
+                        th:text="${#temporals.format(assignment.dueDate, 'dd MMM yyyy HH:mm')}"></span></span>
+                <span><i class="fas fa-star"></i> Max Marks: <span th:text="${assignment.maxMarks}"></span></span>
+                <span th:if="${assignment.filePath != null}"><a th:href="@{/{path}(path=${assignment.filePath})}"
+                        style="color:#2ecc71"><i class="fas fa-download"></i> Download Attachment</a></span>
+            </div>
+            <div class="description" th:text="${assignment.description}"></div>
+        </div>
+        <!-- If already submitted and graded -->
+        <div th:if="${submission != null and submission.grade != null}" class="grade-card">
+            <h3><i class="fas fa-check-circle"></i> Your Grade</h3>
+            <div class="grade-value"><span th:text="${submission.grade}"></span> / <span
+                    th:text="${assignment.maxMarks}"></span></div>
+            <p th:if="${submission.feedback != null}" style="color:#b0bec5; margin-top:10px;"
+                th:text="'Feedback: ' + ${submission.feedback}"></p>
+        </div>
+        <!-- Submit form if not yet submitted -->
+        <div th:unless="${submission}" class="submit-section">
+            <h3><i class="fas fa-upload"></i> Submit Your Work</h3>
+            <form th:action="@{/student/assignments/{id}/submit(id=${assignment.id})}" method="post"
+                enctype="multipart/form-data">
+                <input type="file" name="file" class="file-input" accept=".pdf,.doc,.docx,.png,.jpg" required>
+                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Submit</button>
+            </form>
+        </div>
+        <div th:if="${submission != null and submission.grade == null}"
+            style="background:rgba(52,152,219,0.1); border:1px solid rgba(52,152,219,0.3); border-radius:8px; padding:20px;">
+            <h3 style="color:#3498db;"><i class="fas fa-clock"></i> Submitted</h3>
+            <p style="color:#8892b0;">Your submission is being reviewed. Grade will appear here once the faculty reviews
+                it.</p>
+        </div>
+    </div>
+</body>
+
+</html>

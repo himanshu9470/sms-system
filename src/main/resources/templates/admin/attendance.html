@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - EduTech SMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg-dark: #0f172a;
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-emerald: #10b981;
+            --accent-sky: #0ea5e9
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-main)
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-dark);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1)
+        }
+
+        .sidebar-brand h4 {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .sidebar-brand small {
+            color: var(--text-muted);
+            font-size: 0.75rem
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto
+        }
+
+        .nav-section {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(148, 163, 184, 0.6);
+            font-weight: 600;
+            margin-top: 0.5rem
+        }
+
+        .sidebar .nav-link {
+            color: rgba(248, 250, 252, 0.7);
+            padding: 0.65rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent
+        }
+
+        .sidebar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.08);
+            border-left-color: rgba(99, 102, 241, 0.3)
+        }
+
+        .sidebar .nav-link.active {
+            color: #f8fafc;
+            background: rgba(99, 102, 241, 0.12);
+            border-left-color: var(--primary)
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh
+        }
+
+        .topbar {
+            background: var(--bg-card);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .topbar h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-dark)
+        }
+
+        .content-area {
+            padding: 1.5rem 2rem
+        }
+
+        .course-card {
+            background: var(--bg-card);
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            height: 100%
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            border-color: var(--primary)
+        }
+
+        .course-card h5 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem
+        }
+
+        .course-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 0
+        }
+
+        .course-code {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-sky);
+            margin-bottom: 0.75rem
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-graduation-cap me-2"></i>EduTech SMS</h4><small>Administration Panel</small>
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-section">Main</div><a class="nav-link" th:href="@{/admin/dashboard}"><i
+                    class="fas fa-th-large"></i> Dashboard</a>
+            <div class="nav-section">Management</div><a class="nav-link" th:href="@{/admin/students}"><i
+                    class="fas fa-users"></i> Students</a>
+            <a class="nav-link" th:href="@{/admin/courses}"><i class="fas fa-book-open"></i> Courses</a>
+            <a class="nav-link" th:href="@{/admin/enrollments}"><i class="fas fa-clipboard-list"></i> Enrollments</a>
+            <a class="nav-link" th:href="@{/admin/faculty}"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
+            <a class="nav-link" th:href="@{/admin/users}"><i class="fas fa-user-shield"></i> Users</a>
+            <a class="nav-link active" th:href="@{/admin/attendance}"><i class="fas fa-calendar-check"></i>
+                Attendance</a>
+            <div class="nav-section">Analytics</div><a class="nav-link" th:href="@{/admin/reports}"><i
+                    class="fas fa-chart-bar"></i> Reports</a>
+            <div class="nav-section">System</div><a class="nav-link" th:href="@{/admin/settings}"><i
+                    class="fas fa-cog"></i> Settings</a>
+            <a class="nav-link" th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="topbar">
+            <h1><i class="fas fa-calendar-check me-2" style="color:var(--primary)"></i>Attendance</h1>
+        </div>
+        <div class="content-area">
+            <h6 class="mb-3" style="color:var(--text-muted);font-weight:600">Select a course to view attendance records:
+            </h6>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" th:each="course : ${courses}">
+                    <a th:href="@{/admin/attendance/{id}(id=${course.id})}" class="course-card">
+                        <span class="course-code" th:text="${course.courseCode}"></span>
+                        <h5 th:text="${course.courseName}"></h5>
+                        <p><i class="fas fa-star me-1"></i><span th:text="${course.credits}"></span> Credits</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments - Faculty</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1923;
+            color: #e0e0e0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1a2a3a 0%, #0d1b2a 100%);
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar .brand {
+            padding: 10px 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 15px;
+        }
+
+        .sidebar .brand h3 {
+            color: #56c8f5;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #8892b0;
+            text-decoration: none;
+            transition: 0.3s;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(86, 200, 245, 0.1);
+            color: #56c8f5;
+            border-right: 3px solid #56c8f5;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            color: #56c8f5;
+        }
+
+        .btn-add {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #56c8f5, #4a9fd4);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .assignment-card {
+            background: rgba(26, 42, 58, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .assignment-info h3 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .assignment-info p {
+            color: #8892b0;
+            font-size: 13px;
+        }
+
+        .assignment-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .assignment-meta span {
+            font-size: 12px;
+            color: #56c8f5;
+            background: rgba(86, 200, 245, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .assignment-actions a {
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        .btn-view {
+            background: rgba(86, 200, 245, 0.15);
+            color: #56c8f5;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.15);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+            color: #2ecc71;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="brand">
+            <h3><i class="fas fa-graduation-cap"></i> EduTech</h3><small style="color:#666">Faculty Panel</small>
+        </div>
+        <a th:href="@{/faculty/dashboard}"><i class="fas fa-home"></i> Dashboard</a>
+        <a th:href="@{/faculty/courses}"><i class="fas fa-book"></i> Courses</a>
+        <a th:href="@{/faculty/timetable}"><i class="fas fa-calendar-alt"></i> Timetable</a>
+        <a th:href="@{/faculty/assignments}" class="active"><i class="fas fa-tasks"></i> Assignments</a>
+        <a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    <div class="main">
+        <div class="page-header">
+            <h1><i class="fas fa-tasks"></i> Assignments</h1>
+            <a th:href="@{/faculty/assignments/create}" class="btn-add"><i class="fas fa-plus"></i> Create
+                Assignment</a>
+        </div>
+        <div th:if="${success}" class="alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+        <div th:each="a : ${assignments}" class="assignment-card">
+            <div class="assignment-info">
+                <h3 th:text="${a.title}"></h3>
+                <p th:text="${a.course.courseName}"></p>
+                <div class="assignment-meta">
+                    <span><i class="fas fa-calendar"></i> Due: <span
+                            th:text="${#temporals.format(a.dueDate, 'dd MMM yyyy')}"></span></span>
+                    <span><i class="fas fa-star"></i> Max: <span th:text="${a.maxMarks}"></span></span>
+                </div>
+            </div>
+            <div class="assignment-actions">
+                <a th:href="@{/faculty/assignments/{id}/submissions(id=${a.id})}" class="btn-view"><i
+                        class="fas fa-eye"></i> Submissions</a>
+            </div>
+        </div>
+        <p th:if="${assignments == null or assignments.isEmpty()}" style="color:#666; text-align:center; padding:40px;">
+            No assignments created yet.</p>
+    </div>
+</body>
+
+</html>
